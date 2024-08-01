@@ -22,7 +22,7 @@ mssql_conn = pyodbc.connect(
 
 
 for table in tables:
-    if table == 'sqlite_master':
+    if not table == 'results':
         continue
     print(f"Reading {table} table from SQLite...")
     sqlite_cursor = sqlite_conn.cursor()
@@ -44,13 +44,8 @@ for table in tables:
                 query += ", "
         query += ");"
         print(query)
-        try:
-            mssql_cursor.execute(query)
-        except Exception as e:
-            with open("errors.txt", "a") as f:
-                query = query.encode("ascii", "ignore").decode("ascii")
-                f.write(query + "\n")
-    mssql_conn.commit()
+        with open("errors.txt", "a") as f:
+            query = query.encode("ascii", "ignore").decode("ascii")
+            f.write(query + "\n")
+        
 print("All tables are written to MSSQL Server.") 
-
-# BUNU ÇÖZCEM SONRA gotunu sikim olmuo sqlite orsbuevladı hic bulasmicaktik farkli bi kaggle

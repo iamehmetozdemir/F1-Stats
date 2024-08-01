@@ -9,10 +9,20 @@ mssql_conn = pyodbc.connect(
 )
 
 cursor = mssql_conn.cursor()
-
+success = []
 with open("errors.txt", "r") as f:
     queries = f.readlines()
     for query in queries:
         print(query)
-        cursor.execute(query)
-    mssql_conn.commit()
+        try:
+            cursor.execute(query)
+            mssql_conn.commit()
+            success.append(query)
+        except Exception as e:
+            print(e)
+            break
+        
+with open("errors.txt", "w") as f:
+    for query in queries:
+        if query not in success:
+            f.write(query)
